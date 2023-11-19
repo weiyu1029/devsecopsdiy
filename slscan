@@ -1,0 +1,25 @@
+slscan:
+  runs-on: ubuntu-latest
+  needs: depchecktest
+  name: Perform SL Scan
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Java
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+        cache: 'maven'
+    
+    - name: Run ShiftLeft Security Scan
+      uses: ShiftLeftSecurity/scan-action@master
+      with:
+        type: "credscan,java,depscan"
+        
+    - name: Upload SLSCAN reports
+      uses: actions/upload-artifact@master
+      with:
+        name: SLSCAN reports
+        path: ${{ github.workspace }}/reports
